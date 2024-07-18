@@ -1,0 +1,60 @@
+<select id="topicId" name="topicId" onchange="javascript:
+                    var data = $(':input[name]', '#dynamic-form').serialize();
+                    $.ajax(
+                      'ajax.php/form/help-topic/' + this.value,
+                      {
+                        data: data,
+                        dataType: 'json',
+                        success: function(json) {
+                          $('#dynamic-form').empty().append(json.html);
+                          $(document.head).append(json.media);
+                        }
+                      });">
+                <option value="" selected="selected">— Seleccione un tema de ayuda —
+                </option>
+                <option value="14">Chamontoya / Accesorio de computo</option>
+                <option value="40">Chamontoya / Apoyo de Software</option>
+                <option value="24">Chamontoya / Apoyo GSUITE (gmail, drive, etc)</option>
+                <option value="79">Chamontoya / Apoyos alimentarios</option>
+                <option value="50">Chamontoya / Cámaras y videovigilancia</option>
+                <option value="15">Chamontoya / Falla de equipo</option>
+                <option value="19">Chamontoya / Impresoras</option>
+                <option value="52">Chamontoya / Internet/Red/Navegación</option>
+                <option value="16">Chamontoya / Mantenimiento de equipo</option>
+                <option value="54">Chamontoya / Requerimiento Odoo / Mejora</option>
+                <option value="55">Chamontoya / Requerimiento Odoo / Problema</option>
+                <option value="78">Chamontoya / Sala de cómputo</option>
+                <option value="34">Chamontoya / Tabletas</option>
+                <option value="61">Cuacuila / Accesorio de computo</option>
+                <option value="62">Cuacuila / Apoyo de Software</option>
+                <option value="63">Cuacuila / Apoyo GSUITE (gmail, drive, etc)</option>
+                <option value="64">Cuacuila / Cámaras y videovigilancia</option>
+                <option value="68">Cuacuila / Falla de equipo</option>
+                <option value="69">Cuacuila / Falla de tableta</option>
+                <option value="70">Cuacuila / Impresoras</option>
+                <option value="71">Cuacuila / Internet/Red/Navegación</option>
+                <option value="75">Cuacuila / Mantenimiento de equipo</option>
+                <option value="73">Cuacuila / Requerimiento Odoo / Mejora</option>
+                <option value="74">Cuacuila / Requerimiento Odoo / Problema</option>
+                <option value="13">Oficina Central / Accesorios de computo</option>
+                <option value="25">Oficina Central / Apoyo de Software</option>
+                <option value="27">Oficina Central / Apoyo GSUITE (gmail, drive, etc)</option>
+                <option value="57">Oficina Central / Cámaras y videovigilancia</option>
+                <option value="21">Oficina Central / Falla de equipo</option>
+                <option value="22">Oficina Central / Impresoras</option>
+                <option value="10">Oficina Central / Internet/Red/Navegación</option>
+                <option value="35">Oficina Central / Mantenimiento equipo</option>
+                <option value="60">Oficina Central / Requerimiento Odoo / Mejora</option>
+                <option value="59">Oficina Central / Requerimiento Odoo / Problema</option>
+                <option value="2">Zacatlán / Accesorio de computo</option>
+                <option value="41">Zacatlán / Apoyo de Software</option>
+                <option value="23">Zacatlán / Apoyo GSUITE (gmail, drive, etc)</option>
+                <option value="80">Zacatlán / Apoyos alimentarios</option>
+                <option value="46">Zacatlán / Cámaras y videovigilancia</option>
+                <option value="11">Zacatlán / Falla de equipo</option>
+                <option value="18">Zacatlán / Impresoras</option>
+                <option value="43">Zacatlán / Internet/Red/Navegación</option>
+                <option value="12">Zacatlán / Mantenimiento de equipo</option>
+                <option value="48">Zacatlán / Requerimiento Odoo / Mejora</option>
+                <option value="49">Zacatlán / Requerimiento Odoo / Problema</option>            
+                </select>
