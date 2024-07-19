@@ -9,8 +9,19 @@ exports.getAllTickets = async () => {
     }
 };
 
-exports.getTicketById = async ({ id }) => {
-  const sql = 'SELECT * FROM ticket WHERE id = 2';
+exports.getTicketById = async ( id ) => {
+  const sql = 'SELECT * FROM ticket WHERE id = ?';
+  try{
+    console.log('Value id modelticket', id)
+    const [ rows, fields ] = await db.query(sql,[id])
+    return rows;
+  } catch (e) {
+    console.log('Error ticketModel by id')
+  }
+};
+
+exports.getTicketByEmail = async ({ id }) => {
+  const sql = 'SELECT * FROM ticket WHERE email = ?';
   const params = [id];
   try{
     console.log('Value id modelticket', params)

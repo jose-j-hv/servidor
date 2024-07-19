@@ -1,6 +1,6 @@
 const ticketModel = require('../models/ticketModel');
 
-exports.getAllTickets = async (sql, res, next) => {
+exports.getAllTickets = async (req, res, next) => {
   try {
     const rows = await ticketModel.getAllTickets();
     res.json(rows)
@@ -10,11 +10,23 @@ exports.getAllTickets = async (sql, res, next) => {
   }
 };
 
-exports.getTicketById = async (data, res, next) => {
+exports.getTicketById = async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id)
+    console.log('Controllerticket bi id=== ', id)
+    const rows = await ticketModel.getTicketById(id);
+    console.log('Controllerticket rws bi id=== ', rows)
+    res.json(rows)
+  } catch (err) {
+    res.status(500).send('error en TicketController');
+    next(err);
+  }
+};
+exports.getTicketByEmail = async (data, res, next) => {
   try {
     console.log('Controllerticket bi id: ', data.body)
-    const rows = await ticketModel.getTicketById(data.body);
-    console.log('Controllerticket bi id: ', rows)
+    const rows = await ticketModel.getTicketByEmail(data.body);
+    console.log('Controllerticket bi Email: ', rows)
     res.json(rows)
   } catch (err) {
     res.status(500).send('error en TicketController');

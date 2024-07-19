@@ -4,7 +4,8 @@ const ticketController = require('../controllers/ticketController');
 
 router.get('/', ticketController.getAllTickets);
 router.get('/getall', ticketController.getAllTickets);
-router.get('/getone', ticketController.getTicketById);
+router.get('/getOneById/:id', ticketController.getTicketById);
+router.get('/getOneByEmail/:email', ticketController.getTicketByEmail);
 router.post('/createTicket', ticketController.createTicket);
 
 
