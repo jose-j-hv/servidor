@@ -10,9 +10,9 @@ var usersRouter = require('./routes/users');
 var ticketsRouter = require('./routes/tickets');
 var temaRouter = require('./routes/tema');
 var centroRouter = require('./routes/centro');
+var loginRouter =  require('./routes/login');
 
 var app = express();
-
 app.use(cors());
 
 // view engine setup
@@ -30,6 +30,7 @@ app.use('/users', usersRouter);
 app.use('/tickets', ticketsRouter);
 app.use('/tema', temaRouter);
 app.use('/centro', centroRouter);
+app.use('/login', loginRouter);
 
 
 // catch 404 and forward to error handler

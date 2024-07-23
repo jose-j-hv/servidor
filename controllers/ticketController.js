@@ -12,8 +12,7 @@ exports.getAllTickets = async (req, res, next) => {
 
 exports.getTicketById = async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id)
-    console.log('Controllerticket bi id=== ', id)
+    const id = parseInt(req.params.id);
     const rows = await ticketModel.getTicketById(id);
     console.log('Controllerticket rws bi id=== ', rows)
     res.json(rows)
@@ -23,15 +22,7 @@ exports.getTicketById = async (req, res, next) => {
   }
 };
 exports.getTicketByEmail = async (data, res, next) => {
-  try {
-    console.log('Controllerticket bi id: ', data.body)
-    const rows = await ticketModel.getTicketByEmail(data.body);
-    console.log('Controllerticket bi Email: ', rows)
-    res.json(rows)
-  } catch (err) {
-    res.status(500).send('error en TicketController');
-    next(err);
-  }
+
 };
 
 exports.createTicket = async (data, res, next) => {
@@ -40,6 +31,5 @@ exports.createTicket = async (data, res, next) => {
     res.json(newTicket)
   } catch (err) {
     res.status(500).send('error en create ticket');
-    next(err);
   }
 };
