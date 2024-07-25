@@ -14,7 +14,6 @@ exports.getTicketById = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
     const rows = await ticketModel.getTicketById(id);
-    console.log('Controllerticket rws bi id=== ', rows)
     res.json(rows)
   } catch (err) {
     res.status(500).send('error en TicketController');
