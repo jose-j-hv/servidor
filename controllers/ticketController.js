@@ -9,6 +9,16 @@ exports.getAllTickets = async (req, res, next) => {
     next(err);
   }
 };
+exports.getAllTicketsByUser = async (req, res, next) => {
+  try {
+    const id = req.idUser
+    const rows = await ticketModel.getAllTicketsByUser(idUser);
+    res.json(rows)
+  } catch (err) {
+    res.status(500).send('error en: getall ticket');
+    next(err);
+  }
+};
 
 exports.getTicketById = async (req, res, next) => {
   try {
