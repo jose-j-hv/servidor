@@ -2,9 +2,18 @@ npm install bcrypt
 
 npm install jsonwebtoken
 
+express-session
+
+
+npm install redis
+npm install express-mysql-session
+
+
 $ npm i dotenv --save
 
-curl -X POST -H "Content-Type: application/json" -d '{"nombre":"Jose Juan","correo":"servicioti4@proyectoroberto.org.mx","password":"Jose5315"}' http://localhost:8000/users/registrar
+npm install passport passport-local
+
+curl -X POST -H "Content-Type: application/json" -d '{"nombre":"Jose Juan","correo":"servicioti2@proyectoroberto.org.mx","password":"Jose5315"}' http://localhost:8000/users/registrar
 
 
     const sql = 'INSERT INTO usuario (nombre, correo, pass ) VALUES ("Juan", "jos@gmail.com", "Jose5315" )';

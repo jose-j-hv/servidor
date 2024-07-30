@@ -11,7 +11,8 @@ exports.getAllTickets = async (req, res, next) => {
 };
 exports.getAllTicketsByUser = async (req, res, next) => {
   try {
-    const id = req.idUser
+    console.log('controll req', req.params.id)
+    const idUser = req.params.id
     const rows = await ticketModel.getAllTicketsByUser(idUser);
     res.json(rows)
   } catch (err) {

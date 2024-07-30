@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const secretKey = 'secret'; // Asegúrate de que esta clave secreta sea segura
+require('dotenv').config();
 
 const verifyToken = (req, res, next) => {
   const header = req.header("Authorization") || "";
@@ -10,7 +10,7 @@ const verifyToken = (req, res, next) => {
   }
 
   try {
-    const payload = jwt.verify(token, secretKey);
+    const payload = jwt.verify(token, process.env.SECRETKEY_ENV);
     req.username = payload.username;
     next();
   } catch (error) {

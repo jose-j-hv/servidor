@@ -256,5 +256,21 @@ INSERT INTO tema (nombre, descripcion, prioridad) VALUES
 ('Tabletas', 'Reparación o mantenimiento de tabletas.', 3),
 ('Apoyos alimentarios', 'Distribución de apoyos alimentarios.', 2),
 ('CCTV', 'Mantenimiento y operación del sistema de cámaras de seguridad (CCTV).', 5);
-
-INSERT INTO usuario
+CREATE OR REPLACE TABLE sesionUsuario (
+  ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  PROPID VARCHAR(128) NOT NULL,
+  APPNAME VARCHAR(64) NOT NULL,
+  LISTENERCNT INTEGER NOT NULL,
+  LASTACCESS DATETIME NOT NULL,
+  CREATIONTIME DATETIME NOT NULL,
+  MAXINACTIVETIME INTEGER NOT NULL,
+  USERNAME BIGINT UNSIGNED,
+  SMALL INTEGER NOT NULL,
+  MEDIUM INTEGER NOT NULL,
+  LARGE INTEGER NOT NULL,
+  CONSTRAINT fk_id_USER_email_usuario
+    FOREIGN KEY (USERNAME) REFERENCES usuario(id)
+    ON DELETE CASCADE
+    ON UPDATE RESTRICT,
+  PRIMARY KEY (ID)
+) ENGINE=InnoDB;
