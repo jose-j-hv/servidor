@@ -8,7 +8,6 @@ exports.login = async ( correo ) => {
     if (rows.length > 0) {
       return rows[0];
     } else {
-      console.log('Email not found')
       return null;
     }
   } catch (err) {

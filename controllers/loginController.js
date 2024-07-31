@@ -9,15 +9,13 @@ exports.login = async (req, res, next) => {
   const rows = await loginModel.login(correo);
   try{
     if (rows == null){
-      res.status(401).json({ message: 'Correo no registrado' });
-      return null;
+      return res.status(401).json({ message: 'Correo no registrado' });
     } else{
       const passpass = rows.pass
       if (await bcrypt.compare(pass, passpass) == true) {
         console.log('Acceso correcto, usuario y contraseña correctos')
       } else {
-        res.status(401).json({ message: 'Error al iniciar sesión, Credenciales no validas' });
-        return null;
+        return res.status(401).json({ message: 'Error al iniciar sesión, Credenciales no validas' });
       }
       const user = rows
       const token = jwt.sign({ user }, process.env.SECRETKEY_ENV, { expiresIn: "1h" });
@@ -36,6 +34,7 @@ exports.login = async (req, res, next) => {
             correo: rows.correo,
             rol: rows.rol
           }
+          next(); 
         });
       });
       return res.status(200).json({ user, token });
