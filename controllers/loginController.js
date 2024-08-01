@@ -8,14 +8,14 @@ exports.login = async (req, res, next) => {
   const { correo, pass } = req.body;
   const rows = await loginModel.login(correo);
   try{
-    if (rows == null){
-      return res.status(401).json({ message: 'Correo no registrado' });
+    if (!rows){
+      return res.status(401).json({ message: 'Correo no registrado', error: 'correo' });
     } else{
       const passpass = rows.pass
       if (await bcrypt.compare(pass, passpass) == true) {
         console.log('Acceso correcto, usuario y contraseña correctos')
       } else {
-        return res.status(401).json({ message: 'Error al iniciar sesión, Credenciales no validas' });
+        return res.status(401).json({ message: 'Error al iniciar sesión, Credenciales no validas', error: 'password' });
       }
       const user = rows
       const token = jwt.sign({ user }, process.env.SECRETKEY_ENV, { expiresIn: "1h" });
@@ -37,7 +37,8 @@ exports.login = async (req, res, next) => {
           next(); 
         });
       });
-      return res.status(200).json({ user, token });
+      const message = 'Inicio de sesion correcto'
+      return res.status(200).json({ user, token, message });
     }
   } catch (error){
     console.log('Error al iniciar sesion. lc')
