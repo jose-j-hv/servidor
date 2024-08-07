@@ -1,5 +1,6 @@
 const { json } = require('express');
 const loginModel = require('../models/loginModel');
+const ticketModel = require('../models/ticketModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -17,9 +18,12 @@ exports.login = async (req, res, next) => {
       } else {
         return res.status(401).json({ message: 'Error al iniciar sesión, Credenciales no validas', error: 'password' });
       }
+      const id = parseInt(rows.id)
+      const numeroTickets = await ticketModel.getCountTicketIdUser(id)
       const user = rows
       const token = jwt.sign({ user }, process.env.SECRETKEY_ENV, { expiresIn: "1h" });
-      console.log('Bienvenido, ', rows.nombre)
+      user.numeroTickets = parseInt(numeroTickets.numeroTickets)
+      /*
       req.session.regenerate((err) => {
         if (err) {
           console.log('Error en req.session: ')
@@ -37,6 +41,7 @@ exports.login = async (req, res, next) => {
           next(); 
         });
       });
+      */
       const message = 'Inicio de sesion correcto'
       return res.status(200).json({ user, token, message });
     }

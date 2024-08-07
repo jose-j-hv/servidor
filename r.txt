@@ -17,3 +17,9 @@ curl -X POST -H "Content-Type: application/json" -d '{"nombre":"Jose Juan","corr
 
 
     const sql = 'INSERT INTO usuario (nombre, correo, pass ) VALUES ("Juan", "jos@gmail.com", "Jose5315" )';
+
+
+const sql = 'SELECT t.* COUNT(r.id) AS numeroRespuesta FROM ticket t LEFT JOIN mensaje r ON t.id = r.id_ticket WHERE t.id = ? GROUP BY t.id';
+
+
+SELECT t.*, COUNT(r.id) AS numeroRespuesta FROM ticket t LEFT JOIN mensaje r ON t.id = r.id_ticket WHERE t.id = 74 GROUP BY t.id;

@@ -2,7 +2,7 @@ const db = require('../db_config/db');
 
 exports.getAllTickets = async () => {
     try{
-      const res = db.query('SELECT * FROM ticket');
+      const res = await db.query('SELECT * FROM ticket');
       return res;
     } catch (e) {
       console.log('Error get all Ticket')
@@ -10,12 +10,13 @@ exports.getAllTickets = async () => {
 };
 
 exports.getTicketById = async ( id ) => {
-  const sql = 'SELECT * FROM ticket WHERE id = ?';
+  const sql1 = 'SELECT * FROM ticket WHERE id = ?';
   try{
-    const [ rows, fields ] = await db.query(sql,[id])
-    return rows;
+    const rows = await db.query(sql1,[id])
+    return rows
   } catch (e) {
     console.log('Error ticketModel by id')
+    return res.status(500).json({ message: 'Error server' });
   }
 };
 
@@ -29,19 +30,51 @@ exports.getTicketByEmail = async ( email ) => {
   }
 };
 
-exports.getAllTicketsByUser = async ( idUser ) => {
-  const sql = 'SELECT * FROM ticket WHERE id = ?';
+exports.getCountTicketIdUser = async ( id ) => {
+  const sql = 'SELECT COUNT(id) AS numeroTickets FROM ticket WHERE id_contacto = ?';
   try{
-    const [ rows, fields ] = await db.query(sql,[idUser])
+    const [ rows, fields ] = await db.query(sql,[id])
     return rows;
   } catch (e) {
     console.log('Error ticketModel by idUser')
   }
 };
 
-exports.createTicket = async ({ nombre, descripcion }) => {
-  const sql = 'INSERT INTO ticket (titulo, descripcion, id_tema, id_ubicacion ) VALUES (?, ?, ?, ? )';
-  const params = [nombre, descripcion, 1, 1];
+exports.getAllTicketsByIdUser = async ( idUser ) => {
+  const sql = 'SELECT * FROM ticket WHERE id_contacto = ?';
+  try{
+    const [ rows, fields ] = await db.query(sql,[idUser])
+    console.log('Resultados:: ', rows)
+    return rows;
+  } catch (e) {
+    console.log('Error ticketModel by idUser')
+  }
+};
+
+exports.createTicket = async ({ nombre, descripcion, temaSelect, idUser, centroSelect }) => {
+  const sql = 'INSERT INTO ticket (titulo, descripcion, id_tema, id_contacto ,id_ubicacion ) VALUES (?, ?, ?, ?, ? )';
+  const params = [nombre, descripcion, temaSelect, idUser, centroSelect];
+  try {
+    const result = await db.query(sql, params)
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.getAllResByIdTicket = async (id) => {
+  const sql = 'SELECT * FROM mensaje where id_ticket = ?'
+  try {
+    const res = db.query(sql,[id])
+    return res;
+  } catch (e) {
+    throw e;
+  }
+};
+
+exports.nuevaRespuesta = async ({ id_ticket, id_usuario, mensaje  }) => {
+  const sql = 'INSERT INTO mensaje (id_ticket, id_usuario, mensaje) VALUES (?, ?, ? )';
+  const params = [id_ticket, id_usuario, mensaje];
   try {
     const result = await db.query(sql, params)
     return result;

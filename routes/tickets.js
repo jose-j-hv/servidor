@@ -4,9 +4,10 @@ const ticketController = require('../controllers/ticketController');
 const verifyToken = require('../middlewares/auth'); 
 
 router.get('/', verifyToken, ticketController.getAllTickets);
-router.get('/getAllbyUser/:id', verifyToken, ticketController.getAllTicketsByUser);
+router.get('/getAllByIdUser/:id', verifyToken, ticketController.getAllTicketsByIdUser);
 router.get('/getOneById/:id', verifyToken, ticketController.getTicketById);
 router.get('/getOneByEmail/:email', verifyToken, ticketController.getTicketByEmail);
 router.post('/createTicket', verifyToken, ticketController.createTicket);
+router.post('/nuevaRespuesta', verifyToken, ticketController.nuevaRespuesta);
 
 module.exports = router;

@@ -9,28 +9,31 @@ exports.getAllTickets = async (req, res, next) => {
     next(err);
   }
 };
-exports.getAllTicketsByUser = async (req, res, next) => {
+
+exports.getAllTicketsByIdUser = async (req, res, next) => {
   try {
-    console.log('controll req', req.params.id)
-    const idUser = req.params.id
-    const rows = await ticketModel.getAllTicketsByUser(idUser);
-    res.json(rows)
+    const id = parseInt(req.params.id);
+    const rows = await ticketModel.getAllTicketsByIdUser(id);
+    return res.status(200).json({ message: 'Exito', data : rows});
   } catch (err) {
-    res.status(500).send('error en: getall ticket');
-    next(err);
+    return res.status(500).send({ message: 'Error getAllTicketsByIdUser' });
   }
 };
 
 exports.getTicketById = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
-    const rows = await ticketModel.getTicketById(id);
-    res.json(rows)
+    const [rows] = await ticketModel.getTicketById(id);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Ticket no existente'});
+    } else {
+      return res.status(200).json({ message: 'Exito', data : rows});
+    }
   } catch (err) {
-    res.status(500).send('error en TicketController');
-    next(err);
+    return res.status(500).send({ message: 'Error al buscar el ticket' });
   }
 };
+
 exports.getTicketByEmail = async (data, res, next) => {
 
 };
@@ -40,6 +43,16 @@ exports.createTicket = async (data, res, next) => {
     const newTicket = await ticketModel.createTicket(data.body);
     res.json(newTicket)
   } catch (err) {
-    res.status(500).send('error en create ticket');
+    res.status(500).send('Error en create ticket');
+  }
+};
+
+exports.nuevaRespuesta = async (data, res, next) => {
+  try {
+    console.log('Nuevares: ', data.body)
+    const newRes = await ticketModel.nuevaRespuesta(data.body);
+    res.json(newRes)
+  } catch (err) {
+    res.status(500).send('Error insertando respuesta');
   }
 };

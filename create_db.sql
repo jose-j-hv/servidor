@@ -91,6 +91,7 @@ CREATE OR REPLACE TABLE ticket(
     id_tema BIGINT UNSIGNED,
     id_contacto BIGINT UNSIGNED,
     id_ubicacion BIGINT UNSIGNED,
+    creado_fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `fk_id_tema_ticket`
         FOREIGN KEY (id_tema) REFERENCES tema(id)
         ON DELETE CASCADE
@@ -124,7 +125,7 @@ CREATE OR REPLACE TABLE mensaje(
     id_ticket BIGINT UNSIGNED,
     id_usuario BIGINT UNSIGNED,
     mensaje VARCHAR(2500) NOT NULL,
-    fecha DATE NOT NULL,
+    fecha DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `fk_id_ticket_m`
         FOREIGN KEY (id_ticket) REFERENCES ticket(id)
         ON DELETE CASCADE
