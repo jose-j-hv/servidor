@@ -12,7 +12,7 @@ exports.getAllTickets = async () => {
 exports.getTicketById = async ( id ) => {
   const sql1 = 'SELECT * FROM ticket WHERE id = ?';
   try{
-    const rows = await db.query(sql1,[id])
+    const [rows] = await db.query(sql1,[id])
     return rows
   } catch (e) {
     console.log('Error ticketModel by id')
@@ -23,7 +23,7 @@ exports.getTicketById = async ( id ) => {
 exports.getTicketByEmail = async ( email ) => {
   const sql = 'SELECT * FROM ticket WHERE email = ?';
   try{
-    const [ rows, fields ] = await db.query(sql,[email])
+    const rows = await db.query(sql,[email])
     return rows;
   } catch (e) {
     console.log('Error ticketModel by email')
@@ -33,7 +33,7 @@ exports.getTicketByEmail = async ( email ) => {
 exports.getCountTicketIdUser = async ( id ) => {
   const sql = 'SELECT COUNT(id) AS numeroTickets FROM ticket WHERE id_contacto = ?';
   try{
-    const [ rows, fields ] = await db.query(sql,[id])
+    const [rows] = await db.query(sql,[id])
     return rows;
   } catch (e) {
     console.log('Error ticketModel by idUser')
@@ -43,7 +43,7 @@ exports.getCountTicketIdUser = async ( id ) => {
 exports.getAllTicketsByIdUser = async ( idUser ) => {
   const sql = 'SELECT * FROM ticket WHERE id_contacto = ?';
   try{
-    const [ rows, fields ] = await db.query(sql,[idUser])
+    const rows = await db.query(sql,[idUser])
     console.log('Resultados:: ', rows)
     return rows;
   } catch (e) {
@@ -62,7 +62,17 @@ exports.createTicket = async ({ nombre, descripcion, temaSelect, idUser, centroS
   }
 };
 
-exports.getAllResByIdTicket = async (id) => {
+exports.getNumlResByIdTicket = async ( id ) => {
+  const sql = 'SELECT COUNT(id) AS numeroRespuestas FROM mensaje WHERE id_ticket = ?'
+  try{
+    const [rows] = await db.query(sql,[id])
+    return rows;
+  } catch (e) {
+    console.log('Error ticketModel by idUser')
+  }
+};
+
+exports.getAllResByTicketId = async (id) => {
   const sql = 'SELECT * FROM mensaje where id_ticket = ?'
   try {
     const res = db.query(sql,[id])

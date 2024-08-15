@@ -23,6 +23,7 @@ exports.login = async (req, res, next) => {
       const user = rows
       const token = jwt.sign({ user }, process.env.SECRETKEY_ENV, { expiresIn: "1h" });
       user.numeroTickets = parseInt(numeroTickets.numeroTickets)
+      console.log('Impresion user', user)
       /*
       req.session.regenerate((err) => {
         if (err) {
@@ -43,6 +44,7 @@ exports.login = async (req, res, next) => {
       });
       */
       const message = 'Inicio de sesion correcto'
+      delete user.pass;
       return res.status(200).json({ user, token, message });
     }
   } catch (error){

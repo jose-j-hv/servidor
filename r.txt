@@ -15,11 +15,14 @@ npm install passport passport-local
 
 curl -X POST -H "Content-Type: application/json" -d '{"nombre":"Jose Juan","correo":"servicioti2@proyectoroberto.org.mx","password":"Jose5315"}' http://localhost:8000/users/registrar
 
-
-    const sql = 'INSERT INTO usuario (nombre, correo, pass ) VALUES ("Juan", "jos@gmail.com", "Jose5315" )';
-
+const sql = 'INSERT INTO usuario (nombre, correo, pass ) VALUES ("Juan", "jos@gmail.com", "Jose5315" )';
 
 const sql = 'SELECT t.* COUNT(r.id) AS numeroRespuesta FROM ticket t LEFT JOIN mensaje r ON t.id = r.id_ticket WHERE t.id = ? GROUP BY t.id';
 
-
 SELECT t.*, COUNT(r.id) AS numeroRespuesta FROM ticket t LEFT JOIN mensaje r ON t.id = r.id_ticket WHERE t.id = 74 GROUP BY t.id;
+
+
+Insertar usuario completo
+usuario, numero, rol, 
+
+curl -X POST -H "Content-Type: application/json" -d '{"nombre":"Jose Juan Hernández Villegas","correo":"serviciosocial@proyectoroberto.org.mx","password":"Jose5315"}' http://localhost:8000/users/registrar
