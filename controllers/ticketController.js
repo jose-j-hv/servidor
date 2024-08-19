@@ -66,9 +66,7 @@ exports.nuevaRespuesta = async (data, res, next) => {
 exports.getAllResByTicketId = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
-    console.log('Respuestas antes model: ', id)
     const newRes = await ticketModel.getAllResByTicketId(id);
-    console.log('Respuestas despues: ', newRes)
     return res.status(200).json({ message: 'Exito', data : newRes});
   } catch (err) {
     return res.status(200).json({ message: 'Error obteniendo respuestas'});
