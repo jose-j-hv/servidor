@@ -1,4 +1,5 @@
 const db = require('../db_config/db');
+const fs = require('fs');
 
 exports.getAllTickets = async () => {
     try{
@@ -51,11 +52,18 @@ exports.getAllTicketsByIdUser = async ( idUser ) => {
   }
 };
 
-exports.createTicket = async ({ nombre, descripcion, temaSelect, idUser, centroSelect }) => {
+exports.createTicket = async ({ titulo, descripcion, temaSelect, idUser, centroSelect, estatus },evidenciaPath ) => {
   const sql = 'INSERT INTO ticket (titulo, descripcion, id_tema, id_contacto ,id_ubicacion ) VALUES (?, ?, ?, ?, ? )';
-  const params = [nombre, descripcion, temaSelect, idUser, centroSelect];
+  const sql2 = 'INSERT INTO estatus (id_ticket, estatus, id_usuario ) VALUES (?, ?, ? )';
+  const sql3 = 'INSERT INTO evidencias (id_ticket, id_usuario, evidencia ) VALUES (?, ?, ? )';
+  const params = [titulo, descripcion, temaSelect, idUser, centroSelect];
   try {
     const result = await db.query(sql, params)
+    const id_ticket = result.insertId
+    const params2 = [id_ticket, estatus, idUser];
+    const params3 = [id_ticket, idUser, evidencia.buffer];
+    await db.query(sql3, params3)
+    await db.query(sql2, params2)
     return result;
   } catch (error) {
     throw error;

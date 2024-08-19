@@ -172,7 +172,7 @@ CREATE OR REPLACE TABLE evidencias(
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_ticket BIGINT UNSIGNED,
     id_usuario BIGINT UNSIGNED,
-    evidenia longblob NOT NULL,
+    evidencia longblob NOT NULL,
     CONSTRAINT `fk_id_ticket_e`
         FOREIGN KEY (id_ticket) REFERENCES ticket(id)
         ON DELETE CASCADE

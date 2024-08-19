@@ -46,7 +46,9 @@ exports.getTicketByEmail = async (data, res, next) => {
 
 exports.createTicket = async (data, res, next) => {
   try {
-    const newTicket = await ticketModel.createTicket(data.body);
+    console.log('}Recibido body', data.body)
+    console.log('}Recibido file', data.file)
+    const newTicket = await ticketModel.createTicket(data.body,data.file);
     res.json(newTicket)
   } catch (err) {
     res.status(500).send('Error en create ticket');
