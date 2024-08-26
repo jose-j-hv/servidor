@@ -92,6 +92,8 @@ CREATE OR REPLACE TABLE ticket(
     id_contacto BIGINT UNSIGNED,
     id_ubicacion BIGINT UNSIGNED,
     creado_fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    cambio_fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id_analista BIGINT NULL,
     CONSTRAINT `fk_id_tema_ticket`
         FOREIGN KEY (id_tema) REFERENCES tema(id)
         ON DELETE CASCADE
@@ -100,8 +102,12 @@ CREATE OR REPLACE TABLE ticket(
         FOREIGN KEY (id_contacto) REFERENCES usuario(id)
         ON DELETE CASCADE
         ON UPDATE RESTRICT,
-        CONSTRAINT `fk_id_ubicacion_ticket`
+    CONSTRAINT `fk_id_ubicacion_ticket`
         FOREIGN KEY (id_ubicacion) REFERENCES ubicacion(id)
+        ON DELETE CASCADE
+        ON UPDATE RESTRICT,
+    CONSTRAINT `fk_id_usuario_ticket`
+        FOREIGN KEY (id_analista) REFERENCES usuario(id)
         ON DELETE CASCADE
         ON UPDATE RESTRICT
 )ENGINE = InnoDB;
@@ -126,6 +132,7 @@ CREATE OR REPLACE TABLE mensaje(
     id_usuario BIGINT UNSIGNED,
     mensaje VARCHAR(2500) NOT NULL,
     fecha DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    evidencia longblob NULL,
     CONSTRAINT `fk_id_ticket_m`
         FOREIGN KEY (id_ticket) REFERENCES ticket(id)
         ON DELETE CASCADE
@@ -172,7 +179,8 @@ CREATE OR REPLACE TABLE evidencias(
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_ticket BIGINT UNSIGNED,
     id_usuario BIGINT UNSIGNED,
-    evidencia longblob NOT NULL,
+    evidencia longblob NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `fk_id_ticket_e`
         FOREIGN KEY (id_ticket) REFERENCES ticket(id)
         ON DELETE CASCADE
@@ -208,6 +216,19 @@ CREATE OR REPLACE TABLE kpi_hstorico(
         ON DELETE CASCADE
         ON UPDATE RESTRICT
 )ENGINE = InnoDB;
+CREATE OR REPLACE TABLE permisos_usuarios(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id_usuario BIGINT UNSIGNED NOT NULL,
+    puesto VARCHAR(50) NOT NULL,
+    permiso INTEGER NOT NULL,
+    descripcion_permiso VARCHAR(500) NOT NULL,
+    CONSTRAINT `fk_id_id_permiso_usuario`
+        FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+        ON DELETE CASCADE
+        ON UPDATE RESTRICT
+)ENGINE = InnoDB;
+
+INSERT INTO permisos_usuarios (id_usuario, puesto, permiso, descripcion_permiso) VALUES (14, 'Usuario', 2, 'Crear, Ver, Responder, Buscar, Cerrar');
 
 INSERT INTO rol (rol, descripcion) VALUES 
 ('Administrador', 'Tiene acceso completo a todas las funcionalidades del sistema'),
@@ -275,3 +296,12 @@ CREATE OR REPLACE TABLE sesionUsuario (
     ON UPDATE RESTRICT,
   PRIMARY KEY (ID)
 ) ENGINE=InnoDB;
+
+
+curl -X POST -H "Content-Type: application/json" -d '{"nombre":"Jose Juan Hernández Villegas","correo":"josejuan@proyectoroberto.org.mx","password":"Jose5315"}' http://localhost:8000/users/registrar
+
+
+
+ALTER TABLE mensaje ADD COLUMN id_evidencia BIGINT UNSIGNED, CONSTRAINT `fk_id_evidencia_m` FOREIGN KEY (id_evidencia) REFERENCES evidencia(id) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE ticket ADD COLUMN id_usuario BIGINT UNSIGNED, CONSTRAINT `fk_id_usuario_t` FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON DELETE CASCADE ON UPDATE RESTRICT;
