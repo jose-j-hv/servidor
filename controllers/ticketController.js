@@ -13,7 +13,7 @@ exports.getAllTickets = async (req, res, next) => {
 exports.getAllWithoutAnalist = async (req, res, next) => {
   try {
     const rows = await ticketModel.getAllWithoutAnalist();
-    return res.status(200).json({ message: 'Exito', data : rows});
+    return res.status(200).json({ message: 'Exito', data : rows });
   } catch (err) {
     res.status(500).send('error en: getall ticket');
     next(err);
@@ -24,7 +24,7 @@ exports.getAllWithAnalist = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
     const rows = await ticketModel.getAllWithAnalist(id);
-    return res.status(200).json({ message: 'Exito', data : rows});
+    return res.status(200).json({ message: 'Exito', data : rows });
   } catch (err) {
     res.status(500).send('error en: getall ticket');
     next(err);
@@ -46,7 +46,6 @@ exports.getEvidencias = async (req, res, nxt) => {
     const id = parseInt(req.params.id);
     const rows = await ticketModel.getEvidencias(id);
     console.log('Respuesta buffer ticketController', rows)
-
     return res.status(200).json({ message: 'Exito', data : rows});
   } catch (error) {
     console.log('Error ticketController get Evidencias')
@@ -58,10 +57,10 @@ exports.getTicketById = async (req, res, next) => {
     const id = parseInt(req.params.id);
     const rows = await ticketModel.getTicketById(id);
     if (rows.length === 0) {
-      return res.status(404).json({ message: 'Ticket no existente'});
+      return res.status(201).json({ message: 'Ticket no existente'});
     } else {
-      const numRes = await ticketModel.getNumlResByIdTicket(id)
-      if (rows.length === 0) {
+      const numRes = await ticketModel.getNumResByIdTicket(id)
+      if (numRes.length === 0) {
         rows.numeroRespuestas = 0;
       } else {
         rows.numeroRespuestas = parseInt(numRes.numeroRespuestas);
@@ -98,8 +97,8 @@ exports.nuevaRespuesta = async (data, res, next) => {
 exports.getAllResByTicketId = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
-    const newRes = await ticketModel.getAllResByTicketId(id);
-    return res.status(200).json({ message: 'Exito', data : newRes});
+    const Res = await ticketModel.getAllResByTicketId(id);
+    return res.status(200).json({ message: 'Exito', data : Res});
   } catch (err) {
     return res.status(200).json({ message: 'Error obteniendo respuestas'});
   }

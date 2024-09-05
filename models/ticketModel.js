@@ -18,16 +18,6 @@ exports.getAllWithoutAnalist = async () => {
   }
 };
 
-exports.getAllWithAnalist = async ( id ) => {
-  const sql = 'SELECT * FROM ticket WHERE id_analista = ?';
-  try{
-    const res = await db.query(sql, [id])
-    return res;
-  } catch (e) {
-    console.log('Error get all Ticket getAllAnalist')
-  }
-};
-
 exports.getEvidencias = async (id) => {
   const sql = 'SELECT evidencia, fecha FROM evidencias WHERE id_ticket = ? ORDER BY fecha';
   try{
@@ -39,23 +29,36 @@ exports.getEvidencias = async (id) => {
   }
 };
 
+exports.getAllWithAnalist = async ( id ) => {
+  const sql = 'SELECT * FROM ticket WHERE id_analista = ?';
+  const sql3 = 'SELECT fecha FROM mensaje WHERE id_ticket = ? ORDER BY fecha DESC LIMIT 1';
+  try {
+    const rows = await db.query(sql, [id]);
+    for (const row of rows) {
+      const rows3 = await db.query(sql3, [row.id]);
+      if (rows3.length > 0) {
+        row.fecha_respuesta = rows3[0].fecha;
+      } else {
+        row.fecha_respuesta = 'Sin respuesta';
+      }
+    }
+    return rows;
+  } catch (e) {
+    console.error('Error ticketModel by idUser', e);
+    throw e;
+  }
+};
+
 exports.getTicketById = async ( id ) => {
   const sql1 = 'SELECT * FROM ticket WHERE id = ?';
-  const sql2 = 'SELECT estatus FROM estatus WHERE id_ticket = ?';
   const sql3 = 'SELECT fecha FROM mensaje WHERE id_ticket = ? ORDER BY fecha DESC LIMIT 1';
   try{
     const [rows] = await db.query(sql1,[id])
-    const rows2 = await db.query(sql2, [rows.id])
-    if (rows2.length > 0) {
-      rows.estatus = rows2[0].estatus;
-    } else {
-      rows.estatus = 'Abierto'; 
-    }
     const rows3 = await db.query(sql3, [rows.id]);
     if (rows3.length > 0) {
       rows.fecha_respuesta = rows3[0].fecha;
     } else {
-      rows.fecha_respuesta = 'N/P'; 
+      rows.fecha_respuesta = 'Sin respuesta'; 
     }
     return rows
   } catch (e) {
@@ -86,54 +89,41 @@ exports.getCountTicketIdUser = async ( id ) => {
 
 exports.getAllTicketsByIdUser = async (idUser) => {
   const sql = 'SELECT * FROM ticket WHERE id_contacto = ?';
-  const sql2 = 'SELECT estatus FROM estatus WHERE id_ticket = ?';
   const sql3 = 'SELECT fecha FROM mensaje WHERE id_ticket = ? ORDER BY fecha DESC LIMIT 1';
   try {
     const rows = await db.query(sql, [idUser]);
     for (const row of rows) {
-      const rows2 = await db.query(sql2, [row.id]);
-      if (rows2.length > 0) {
-        row.estatus = rows2[0].estatus;
-      } else {
-        row.estatus = 'Abierto';
-      }
       const rows3 = await db.query(sql3, [row.id]);
       if (rows3.length > 0) {
         row.fecha_respuesta = rows3[0].fecha;
       } else {
-        row.fecha_respuesta = 'N/R';
+        row.fecha_respuesta = 'Sin respuesta';
       }
     }
-    //console.log('Resultados:: ', rows);
     return rows;
   } catch (e) {
     console.error('Error ticketModel by idUser', e);
-    throw e; // rethrow the error after logging it
+    throw e;
   }
 };
 
-//Crear mensaje con 'mensaje' = inicio, relacionado a evidencia
 exports.createTicket = async ({ titulo, descripcion, temaSelect, idUser, centroSelect, estatus },evidencia ) => {
-  const sql = 'INSERT INTO ticket (titulo, descripcion, id_tema, id_contacto ,id_ubicacion ) VALUES (?, ?, ?, ?, ? )';
-  const sql2 = 'INSERT INTO estatus (id_ticket, estatus, id_usuario ) VALUES (?, ?, ? )';
-  //const sql3 = 'INSERT INTO evidencias (id_ticket, id_usuario, evidencia ) VALUES (?, ?, ? )';
-  const sql3 = 'INSERT INTO evidencias (id_ticket, id_usuario, evidencia ) VALUES (?, ?, ? )';
-  const params = [titulo, descripcion, temaSelect, idUser, centroSelect];
+  const sql = 'INSERT INTO ticket (titulo, descripcion, id_tema, id_contacto ,id_ubicacion, estatus ) VALUES (?, ?, ?, ?, ?, ? )';
+  const sql3 = 'INSERT INTO mensaje (id_ticket, id_usuario, mensaje, evidencia) VALUES (?, ?, ?, ? )';  
+  const params = [titulo, descripcion, temaSelect, idUser, centroSelect, estatus];
     console.log('}Recibido file', evidencia)
   try {
     const result = await db.query(sql, params)
     const id_ticket = result.insertId
-    const params2 = [id_ticket, estatus, idUser];
-    const params3 = [id_ticket, idUser, evidencia.buffer];
+    const params3 = [id_ticket, idUser, 'Primera evidencia' , evidencia.buffer];
     await db.query(sql3, params3)
-    await db.query(sql2, params2)
     return result;
   } catch (error) {
     throw error;
   }
 };
 
-exports.getNumlResByIdTicket = async ( id ) => {
+exports.getNumResByIdTicket = async ( id ) => {
   const sql = 'SELECT COUNT(id) AS numeroRespuestas FROM mensaje WHERE id_ticket = ?'
   try{
     const [rows] = await db.query(sql,[id])
@@ -183,6 +173,16 @@ exports.nuevaRespuesta = async ({ id_ticket, id_usuario, mensaje  }, evidencia) 
     throw error;
   }
 };
+
+exports.ultimaRes = async ( id ) => {
+  const sql = 'SELECT MAX(fecha) FROM mensaje WHERE id_ticket = ?';
+  try {
+    const res = db.query(sql,[id])
+    return res;
+  } catch (e) {
+    throw e;
+  }
+}
 
 exports.asignarAnalista = async ({ idTicket, idUser }) => {
   const sql = 'UPDATE ticket SET id_analista = ? WHERE id = ?;'
